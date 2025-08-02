@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ฟอร์มขอโอนย้ายสาขาวิชา</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 via-white to-green-50 min-h-screen py-10 px-4">
+    <div class="max-w-4xl mx-auto bg-white p-10 rounded-2xl shadow-2xl space-y-6 border border-blue-100">
+        <h1 class="text-3xl font-bold text-center text-blue-700">📄 แบบฟอร์มขอโอนย้ายสาขาวิชา</h1>
+        <p class="text-center text-gray-600 mb-6">สำหรับนักศึกษาที่มีคุณสมบัติตรงตามระเบียบการโอนย้าย</p>
+
+        <form id="transferForm" class="space-y-6">
+            <!-- ROW 1 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block font-medium mb-1">👤 ชื่อ-นามสกุล</label>
+                    <input id="fullname" type="text"
+                        class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400" required>
+                </div>
+                <div>
+                    <label class="block font-medium mb-1">🆔 รหัสนักศึกษา</label>
+                    <input id="studentId" type="text" pattern="^\d{10}$"
+                        class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400" required>
+                </div>
+            </div>
+
+            <!-- ROW 2 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block font-medium mb-1">📞 เบอร์โทรศัพท์</label>
+                    <input id="phone" type="tel" pattern="^0\d{9}$"
+                        class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400" required>
+                </div>
+                <div>
+                    <label class="block font-medium mb-1">🎓 หลักสูตร</label>
+                    <select id="program"
+                        class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400" required>
+                        <option value="">-- เลือก --</option>
+                        <option value="4">4 ปี</option>
+                        <option value="2">4 ปีเทียบเข้า (2 ปี)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- ROW 3 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block font-medium mb-1">🏫 ภาคที่ศึกษา</label>
+                    <select id="studyType"
+                        class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400" required>
+                        <option value="">-- เลือก --</option>
+                        <option value="regular">ภาคปกติ</option>
+                        <option value="parttime">ภาคสมทบ</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-medium mb-1">📑 สาขาวิชาเดิม</label>
+                    <input id="currentMajor" type="text"
+                        class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400" required>
+                </div>
+            </div>
+
+            <!-- ROW 4 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block font-medium mb-1">🏛️ คณะเดิม</label>
+                    <input id="currentFaculty" type="text"
+                        class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400" required>
+                </div>
+                <div>
+                    <label class="block font-medium mb-1">🎯 สาขาวิชาที่ต้องการโอนย้าย</label>
+                    <input id="targetMajor" type="text"
+                        class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400" required>
+                </div>
+            </div>
+
+            <!-- ROW 5 -->
+            <div>
+                <label class="block font-medium mb-1">📝 เหตุผลในการโอนย้าย</label>
+                <textarea id="reason" rows="3"
+                    class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400"
+                    required></textarea>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMsg" class="text-red-600 font-semibold hidden text-center"></div>
+
+            <!-- Submit Button -->
+            <div class="text-center pt-2">
+                <button type="submit"
+                    class="bg-blue-600 text-white px-8 py-3 text-lg rounded-full hover:bg-blue-700 transition">
+                    📤 ส่งคำร้อง
+                </button>
+            </div>
+        </form>
+    </div>
+
+<script>
+    const form = document.getElementById('transferForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // เก็บค่าจากฟิลด์
+        const fullname = document.getElementById('fullname').value.trim();
+        const studentId = document.getElementById('studentId').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const program = document.getElementById('program').value;
+        const studyType = document.getElementById('studyType').value;
+        const currentMajor = document.getElementById('currentMajor').value.trim();
+        const currentFaculty = document.getElementById('currentFaculty').value.trim();
+        const targetMajor = document.getElementById('targetMajor').value.trim();
+        const reason = document.getElementById('reason').value.trim();
+
+        let valid = true;
+        let message = "";
+
+        // ตรวจสอบชื่อ-นามสกุล
+        if (fullname.split(" ").length < 2) {
+            valid = false;
+            message = "กรุณากรอกชื่อและนามสกุลให้ครบถ้วน";
+        }
+        // ตรวจสอบรหัสนักศึกษา
+        else if (!/^\d{10}$/.test(studentId)) {
+            valid = false;
+            message = "รหัสนักศึกษาต้องเป็นตัวเลข 10 หลัก";
+        }
+        // ตรวจสอบเบอร์โทร
+        else if (!/^0\d{9}$/.test(phone)) {
+            valid = false;
+            message = "เบอร์โทรศัพท์ต้องขึ้นต้นด้วย 0 และมีทั้งหมด 10 หลัก";
+        }
+        // ตรวจสอบหลักสูตร
+        else if (!program) {
+            valid = false;
+            message = "กรุณาเลือกหลักสูตร";
+        }
+        // ตรวจสอบภาค
+        else if (!studyType) {
+            valid = false;
+            message = "กรุณาเลือกภาคที่ศึกษา";
+        }
+        // ตรวจสอบสาขาเดิม
+        else if (currentMajor.length < 3) {
+            valid = false;
+            message = "กรุณากรอกชื่อสาขาวิชาเดิมให้ถูกต้อง";
+        }
+        // ตรวจสอบคณะเดิม
+        else if (currentFaculty.length < 3) {
+            valid = false;
+            message = "กรุณากรอกชื่อคณะเดิมให้ถูกต้อง";
+        }
+        // ตรวจสอบสาขาใหม่
+        else if (targetMajor.length < 3) {
+            valid = false;
+            message = "กรุณากรอกชื่อสาขาที่ต้องการโอนให้ถูกต้อง";
+        }
+        // ตรวจสอบเหตุผล
+        else if (reason.length < 10) {
+            valid = false;
+            message = "กรุณาอธิบายเหตุผลในการโอนย้ายให้ครบถ้วน";
+        }
+
+        // แสดงผลลัพธ์
+        if (!valid) {
+            errorMsg.textContent = "❌ " + message;
+            errorMsg.classList.remove("hidden");
+            return;
+        }
+
+        errorMsg.classList.add("hidden");
+        alert("✅ ส่งคำร้องแล้ว! กรุณารอการพิจารณา");
+        form.reset();
+    });
+</script>
+
+</body>
+
+</html>
